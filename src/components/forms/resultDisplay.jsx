@@ -7,7 +7,7 @@ const ResultDisplay = ({ fixedInstallment, decreasingInstallments, totalToRepay,
             <h2>Wyniki kalkulacji</h2>
             <div>
                 <h3>Całkowita kwota do spłaty</h3>
-                <p>{totalToRepay} PLN</p>
+                <p>{totalToRepay.toFixed(2)} PLN</p>
             </div>
             <div>
                 <h3>Kwota do jednorazowej spłaty</h3>

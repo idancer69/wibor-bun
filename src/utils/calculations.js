@@ -1,15 +1,6 @@
 export const calculateFixedInstallment = (loanAmount, annualInterestRate, numberOfInstallments, installmentsPerYear) => {
-    const r = annualInterestRate / 100;
-    const k = installmentsPerYear;
-    const n = numberOfInstallments;
-
-    let sum = 0;
-    for (let i = 0; i < n; i++) {
-        sum += Math.pow(1 + (r / k), -i);
-    }
-
-    const installment = loanAmount / sum;
-    return installment;
+    const sum = [...Array(numberOfInstallments).keys()].reduce((acc, x) => acc + Math.pow(1 + ((annualInterestRate / 100) / installmentsPerYear), -x), 0);
+    return loanAmount / sum;
 }
 
 export const calculateDecreasingInstallment = (loanAmount, annualInterestRate, numberOfInstallments) => {
@@ -17,21 +8,17 @@ export const calculateDecreasingInstallment = (loanAmount, annualInterestRate, n
     const monthlyInterestRate = r / 12;
     const capitalInstallment = loanAmount / numberOfInstallments;
 
-    const installments = [];
-    for (let i = 0; i < numberOfInstallments; i++) {
+    return [...Array(numberOfInstallments).keys()].map(i => {
         const interestInstallment = (loanAmount - (i * capitalInstallment)) * monthlyInterestRate;
-        const totalInstallment = capitalInstallment + interestInstallment;
-        installments.push(totalInstallment);
-    }
-    return installments;
+        return capitalInstallment + interestInstallment;
+    });
 }
 
 export const calculateLoanEndDate = (loanStartDate, numberOfInstallments) => {
-    const monthsToAdd = parseInt(numberOfInstallments, 10);
 
-    if (!loanStartDate || monthsToAdd <= 0) return
+    if (!loanStartDate || numberOfInstallments <= 0) return
     const dateObj = new Date(loanStartDate);
-    dateObj.setMonth(dateObj.getMonth() + monthsToAdd);
+    dateObj.setMonth(dateObj.getMonth() + numberOfInstallments);
 
     const year = dateObj.getFullYear();
     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
